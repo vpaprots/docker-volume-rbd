@@ -1,12 +1,11 @@
 package dockerVolumeRbd
 
 import (
-	"time"
+	"errors"
 	"os/exec"
 	"strings"
-	"errors"
+	"time"
 )
-
 
 var (
 	defaultShellTimeout = 2 * 60 * time.Second
@@ -25,9 +24,6 @@ type ShResult struct {
 	Output string // STDOUT
 	Err    error  // go error, not STDERR
 }
-
-
-
 
 // shWithTimeout will run the Cmd and wait for the specified duration
 func shWithTimeout(howLong time.Duration, name string, args ...string) (string, error) {
@@ -50,7 +46,6 @@ func shWithTimeout(howLong time.Duration, name string, args ...string) (string, 
 
 	return "", nil
 }
-
 
 // shWithDefaultTimeout will use the defaultShellTimeout so you dont have to pass one
 func shWithDefaultTimeout(name string, args ...string) (string, error) {

@@ -1,13 +1,13 @@
 package dockerVolumeRbd
 
 import (
-	"github.com/sirupsen/logrus"
-	"github.com/ceph/go-ceph/rbd"
-	"golang.org/x/sys/unix"
-	"path/filepath"
 	"fmt"
-)
+	"path/filepath"
 
+	"github.com/ceph/go-ceph/rbd"
+	"github.com/sirupsen/logrus"
+	"golang.org/x/sys/unix"
+)
 
 func (d *rbdDriver) mapImage(imageName string) error {
 	logrus.Debugf("volume-rbd Name=%s Message=rbd map", imageName)
@@ -16,7 +16,6 @@ func (d *rbdDriver) mapImage(imageName string) error {
 
 	return err
 }
-
 
 func (d *rbdDriver) unmapImage(imageName string) error {
 	logrus.Debugf("volume-rbd Name=%s Message=rbd unmap", imageName)
@@ -36,32 +35,29 @@ func (d *rbdDriver) unmapImage(imageName string) error {
 	return nil
 }
 
-
 func (d *rbdDriver) mountImage(imageName string, mountOptions string) error {
 
-    device := d.getTheDevice(imageName)
-    mountpoint := d.GetMountPointPath(imageName)
+	device := d.getTheDevice(imageName)
+	mountpoint := d.GetMountPointPath(imageName)
 
 	logrus.Debugf("volume-rbd Name=%s Message=mount %s %s %s", imageName, mountOptions, device, mountpoint)
 
 	// err := unix.Mount(device, mountpoint, "auto", 0, "")
-    // note unix.Mount does not work with our aliased device, we user the sh version.
-    _, err := shWithDefaultTimeout("mount", mountOptions, device, mountpoint)
+	// note unix.Mount does not work with our aliased device, we user the sh version.
+	_, err := shWithDefaultTimeout("mount", mountOptions, device, mountpoint)
 
-    return err
+	return err
 }
-
 
 func (d *rbdDriver) unmountDevice(imageName string) error {
 
-    mountpoint := d.GetMountPointPath(imageName)
+	mountpoint := d.GetMountPointPath(imageName)
 	logrus.Debugf("volume-rbd Message=umount %s", mountpoint)
 
 	err := unix.Unmount(mountpoint, 0)
 
 	return err
 }
-
 
 func (d *rbdDriver) errIfRbdImageHasWatchers(imageName string) error {
 
@@ -70,13 +66,12 @@ func (d *rbdDriver) errIfRbdImageHasWatchers(imageName string) error {
 		return err
 	}
 
-    if rbdHasNoWatchersRegexp.MatchString(status) {
-        return nil
-    }
+	if rbdHasNoWatchersRegexp.MatchString(status) {
+		return nil
+	}
 
-    return fmt.Errorf("image with %s", status)
+	return fmt.Errorf("image with %s", status)
 }
-
 
 func (d *rbdDriver) removeRbdImage(imageName string) error {
 	logrus.Debugf("volume-rbd Name=%s Message=remove rbd image", imageName)
@@ -86,7 +81,6 @@ func (d *rbdDriver) removeRbdImage(imageName string) error {
 	return rbdImage.Remove()
 }
 
-
 // rbdsh will call rbd with the given command arguments, also adding config, user and pool flags
 func (d *rbdDriver) rbdsh(command string, args ...string) (string, error) {
 
@@ -94,7 +88,6 @@ func (d *rbdDriver) rbdsh(command string, args ...string) (string, error) {
 
 	return shWithDefaultTimeout("rbd", args...)
 }
-
 
 // returns the aliased device under device_map_root
 func (d *rbdDriver) getTheDevice(imageName string) string {

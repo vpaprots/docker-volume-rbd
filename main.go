@@ -2,14 +2,13 @@ package main
 
 import (
 	"os"
-	"github.com/sirupsen/logrus"
+
 	"github.com/docker/go-plugins-helpers/volume"
-	"github.com/wetopi/docker-volume-rbd/lib"
+	"github.com/sirupsen/logrus"
+	dockerVolumeRbd "github.com/vpaprots/docker-volume-rbd/lib"
 )
 
 const socketAddress = "/run/docker/plugins/rbd.sock"
-
-
 
 func main() {
 
@@ -17,20 +16,19 @@ func main() {
 
 	logLevel := os.Getenv("LOG_LEVEL")
 
-		switch logLevel {
-		case "3":
-			logrus.SetLevel(logrus.DebugLevel)
-			break;
-		case "2":
-			logrus.SetLevel(logrus.InfoLevel)
-			break;
-		case "1":
-			logrus.SetLevel(logrus.WarnLevel)
-			break;
-		default:
-			logrus.SetLevel(logrus.ErrorLevel)
-		}
-
+	switch logLevel {
+	case "3":
+		logrus.SetLevel(logrus.DebugLevel)
+		break
+	case "2":
+		logrus.SetLevel(logrus.InfoLevel)
+		break
+	case "1":
+		logrus.SetLevel(logrus.WarnLevel)
+		break
+	default:
+		logrus.SetLevel(logrus.ErrorLevel)
+	}
 
 	err, rbdDriver := dockerVolumeRbd.NewDriver()
 	if err != nil {

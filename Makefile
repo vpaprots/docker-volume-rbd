@@ -61,4 +61,4 @@ dev:
 	@echo "### docker build: dev ${PLUGIN_PLATFORM} image with golang deps"
 	@docker build --platform ${PLUGIN_PLATFORM} -q -t ${PLUGIN_NAME}:dev --target go-builder .
 	@echo "### launching interactive shell"
-	@docker run --rm -it -v ${PWD}:/go/src/github.com/wetopi/docker-volume-rbd ${PLUGIN_NAME}:dev bash
+	@docker run --rm -it -v ${PWD}:/go/src/github.com/vpaprots/docker-volume-rbd ${PLUGIN_NAME}:dev bash
